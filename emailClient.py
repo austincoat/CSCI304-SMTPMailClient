@@ -5,64 +5,67 @@ from Tkinter import *
 #!/usr/bin/python
 def sendEmail():
     mailserver = T.get("1.0",END)
-    receive = T2.get("1.0",END)
+    receivers = T2.get("1.0",END)
+    receivers = receivers.split(",")
+    #receive = T2.get("1.0",END)
     cc = T3.get("1.0",END)
     subject = T4.get("1.0",END)
     body = T5.get("1.0",END)
-    clientSocket = socket(AF_INET, SOCK_STREAM)
-    clientSocket.connect((mailserver, 25))
-    recvconnect = clientSocket.recv(1024)
-    print recvconnect
+    for i in receivers:
+        clientSocket = socket(AF_INET, SOCK_STREAM)
+        clientSocket.connect((mailserver, 25))
+        recvconnect = clientSocket.recv(1024)
+        print recvconnect
 
-    if recvconnect[:3] != '220':
-        print '220 reply not received from server.'
+        if recvconnect[:3] != '220':
+            print '220 reply not received from server.'
 
     #Send HELO command and print server response
-    heloCommand = 'HELO Alice \r\n'
-    clientSocket.send(heloCommand)
-    recv1 = clientSocket.recv(1024)
-    print recv1
+        heloCommand = 'HELO Alice \r\n'
+        clientSocket.send(heloCommand)
+        recv1 = clientSocket.recv(1024)
+        print recv1
     # Include This everytime there is no reply
-    if recv1[:3] != '250':
-        print '250 reply not received from server.'
+        if recv1[:3] != '250':
+            print '250 reply not received from server.'
 
     #Send MAIL FROM command and print server response.
-    clientSocket.send("MAIL From: alcoates@delenn.artifice\r\n")
-    recv2 = clientSocket.recv(1024)
-    if recv2[:3] != '250':
-	print '250 reply not received from server.'
+        clientSocket.send("MAIL From: alcoates@delenn.artifice\r\n")
+        recv2 = clientSocket.recv(1024)
+        if recv2[:3] != '250':
+	           print '250 reply not received from server.'
 
     #Send RCPT TO command and print server response.
-    print "Sending RCPT TO Command"
-    clientSocket.send("RCPT TO:" + receive +"\r\n")
-    recv2 = clientSocket.recv(1024)
-    if recv2[:3] != '250':
-	print '250 reply not received from server.'
+        print "Sending RCPT TO Command"
+        clientSocket.send("RCPT TO:" + i +"\r\n")
+        recv2 = clientSocket.recv(1024)
+        if recv2[:3] != '250':
+	           print '250 reply not received from server.'
     #Send DATA command and print server response.
-    print "Sending DATA Command"
-    clientSocket.send("DATA\r\n")
-    recv2 = clientSocket.recv(1024)
-    print recv2
-    if recv2[:3] != '250':
-	print '250 reply not received from server.'
-        
+        print "Sending DATA Command"
+        clientSocket.send("DATA\r\n")
+        recv2 = clientSocket.recv(1024)
+        print recv2
+        if recv2[:3] != '250':
+	           print '250 reply not received from server.'
 
-#Send Data and print server response.
-    print "Sending Data"
-    clientSocket.send("SUBJECT:"+subject+ "\n"+ body +"\n.\r\n")
-    recv2 = clientSocket.recv(1024)
-    print recv2
-    if recv2[:3] != '250':
-	print '250 reply not received from server.'
-        
-#Send QUIT command and get server response.
-    clientSocket.send("QUIT\r\n")
-    recv2 = clientSocket.recv(1024)
-    if recv2[:3] != '250':
-        print '250 reply not received from server.'
-        
-    print "Email Sent!"
-    
+
+               #Send Data and print server response.
+        print "Sending Data"
+        clientSocket.send("SUBJECT:"+subject+ "\n"+ body +"\n.\r\n")
+        recv2 = clientSocket.recv(1024)
+        print recv2
+        if recv2[:3] != '250':
+	           print '250 reply not received from server.'
+
+        #Send QUIT command and get server response.
+        clientSocket.send("QUIT\r\n")
+        recv2 = clientSocket.recv(1024)
+        if recv2[:3] != '250':
+            print '250 reply not received from server.'
+
+        print "Email Sent!"
+
 
 top = Tk()
 # Code to add widgets will go here...
