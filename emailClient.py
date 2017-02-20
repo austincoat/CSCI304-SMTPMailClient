@@ -7,8 +7,9 @@ def sendEmail():
     mailserver = T.get("1.0",END)
     receivers = T2.get("1.0",END)
     receivers = receivers.split(",")
-    #receive = T2.get("1.0",END)
     cc = T3.get("1.0",END)
+    cc = cc.split(",")
+    receivers += cc
     subject = T4.get("1.0",END)
     body = T5.get("1.0",END)
     for i in receivers:
